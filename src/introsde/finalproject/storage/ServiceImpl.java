@@ -90,6 +90,18 @@ public class ServiceImpl implements Service {
 
     @Override
     public String getCongratsPicture() {
-        return "";
+        try {
+            ClientConfig clientConfig = new ClientConfig();
+            Client client = ClientBuilder.newClient(clientConfig);
+
+            String hostname = InetAddress.getLocalHost().getHostAddress();
+            String port = "7005";
+            URI uri = UriBuilder.fromUri("http://" + hostname + ":" + port + "/picture/random").build();
+
+            WebTarget service = client.target(uri);
+            return service.request().accept(MediaType.TEXT_PLAIN).get(String.class);    
+        } catch(UnknownHostException ex) {
+            return "";
+        }
     }
 }
